@@ -28,6 +28,7 @@ export default function UserDashboard() {
   const [contactNumber, setContactNumber] = useState("");
   const [formLoading, setFormLoading] = useState(false);
   const [formError, setFormError] = useState("");
+  const [user, setUser] = useState({ fullName: "" });
 
   const router = useRouter();
 
@@ -42,6 +43,21 @@ export default function UserDashboard() {
       fetchBloodRequests();
     }
   }, []);
+
+  useEffect(() => {
+  const fetchUserData = async () => {
+    try {
+      const res = await axiosInstance.get("/users/profile"); 
+      setUser(res.data);
+    } catch (err) {
+      console.error("Failed to fetch user profile", err);
+    }
+  };
+  
+  if (authorized) {
+    fetchUserData();
+  }
+}, [authorized]);
 
   const fetchBloodRequests = async () => {
     try {
@@ -138,15 +154,23 @@ export default function UserDashboard() {
           </nav>
         </div>
 
-        <button
+        <div className="flex justify-between">
+          <button
           onClick={() => {
             localStorage.clear();
             window.location.href = "/login";
           }}
-          className="w-full text-left flex items-center gap-3 px-4 py-2.5 text-sm font-semibold rounded-xl text-gray-500 hover:bg-red-50 hover:text-red-600 transition"
+          className="w-full text-left flex items-center gap-3 px-4 py-2.5 text-sm font-semibold rounded-full text-gray-500 hover:bg-red-50 hover:text-red-600 transition"
         >
           🚪 Logout
         </button>
+
+          <div className="w-10 h-10 bg-pink-200 rounded-full flex items-center justify-center font-bold text-pink-600 shadow-sm">
+      {user.fullName ? user.fullName.charAt(0).toUpperCase() : 'U'}
+    </div>
+
+          
+        </div>
       </aside>
 
       <main className="flex-1 p-6 md:p-8 overflow-y-auto">

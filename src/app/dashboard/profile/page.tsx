@@ -89,7 +89,7 @@ export default function ProfilePage() {
             <Link
             href={'/dashboard/user'} 
               onClick={() => setIsEditing(true)}
-              className="w-full bg-pink-500 hover:bg-pink-600 text-white font-bold py-3 rounded-2xl transition duration-300 transform hover:scale-105"
+              className="block w-full text-center bg-pink-500 hover:bg-pink-600 text-white font-bold py-3 rounded-xl transition duration-300"
             >
               Back
             </Link>
