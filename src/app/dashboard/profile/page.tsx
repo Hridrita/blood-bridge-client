@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import axiosInstance from "../../../lib/axios";
+import Link from "next/link";
 
 export default function ProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
@@ -59,50 +60,70 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="p-6 max-w-lg mx-auto bg-white rounded-lg shadow-md border">
-      {message && <p className="mb-4 text-center text-sm text-green-600 font-bold">{message}</p>}
+    <div className="min-h-screen flex items-center justify-center bg-pink-50 p-6">
+      <div className="w-full max-w-md bg-white rounded-3xl shadow-xl p-8 border border-pink-100">
+        {message && (
+          <p className="mb-6 text-center text-sm text-emerald-600 font-bold bg-emerald-50 py-2 rounded-full">
+            {message}
+          </p>
+        )}
 
-      {!isEditing ? (
-       
-        <div className="space-y-4">
-          <h2 className="text-2xl font-bold text-red-600">My Profile</h2>
-          <p><strong>Full Name:</strong> {profile.fullName || "N/A"}</p>
-          <p><strong>Area:</strong> {profile.area || "N/A"}</p>
-          <p><strong>Contact:</strong> {profile.contactNumber || "N/A"}</p>
-          <button 
-            onClick={() => setIsEditing(true)}
-            className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700 transition"
-          >
-            Edit Profile
-          </button>
-        </div>
-      ) : (
-        
-        <form onSubmit={handleSave} className="space-y-4">
-          <h2 className="text-xl font-bold text-red-600">Update Profile</h2>
-          
-          <div>
-            <label className="block text-sm font-medium">Full Name</label>
-            <input type="text" className="w-full border p-2 rounded text-black" value={formData.fullName} onChange={(e) => setFormData({...formData, fullName: e.target.value})} />
-          </div>
-          <div>
-            <label className="block text-sm font-medium">Area</label>
-            <input type="text" className="w-full border p-2 rounded text-black" value={formData.area} onChange={(e) => setFormData({...formData, area: e.target.value})} />
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium">New Password</label>
-            <input type="password" placeholder="Leave blank to keep current" className="w-full border p-2 rounded text-black" value={formData.password} onChange={(e) => setFormData({...formData, password: e.target.value})} />
-          </div>
-
-          <div className="flex gap-2">
-            <button type="submit" disabled={loading} className="flex-1 bg-red-600 text-white p-2 rounded hover:bg-red-700">
-              {loading ? "Saving..." : "Save Changes"}
+        {!isEditing ? (
+          <div className="space-y-6 text-center">
+            <div className="w-24 h-24 bg-pink-200 rounded-full flex items-center justify-center mx-auto text-3xl font-bold text-pink-600">
+              {profile.fullName.charAt(0).toUpperCase()}
+            </div>
+            <h2 className="text-3xl font-extrabold text-gray-800">My Profile</h2>
+            <div className="space-y-4 text-left bg-gray-50 p-6 rounded-2xl">
+              <p className="text-gray-600"><strong>👤 Name:</strong> {profile.fullName}</p>
+              <p className="text-gray-600"><strong>📍 Area:</strong> {profile.area}</p>
+              <p className="text-gray-600"><strong>📞 Contact:</strong> {profile.contactNumber}</p>
+            </div>
+            <button
+              onClick={() => setIsEditing(true)}
+              className="w-full bg-pink-500 hover:bg-pink-600 text-white font-bold py-3 rounded-2xl transition duration-300 transform hover:scale-105"
+            >
+              Edit Profile
             </button>
-            <button type="button" onClick={() => setIsEditing(false)} className="bg-gray-300 p-2 rounded px-4">Cancel</button>
+
+            <Link
+            href={'/dashboard/user'} 
+              onClick={() => setIsEditing(true)}
+              className="w-full bg-pink-500 hover:bg-pink-600 text-white font-bold py-3 rounded-2xl transition duration-300 transform hover:scale-105"
+            >
+              Back
+            </Link>
           </div>
-        </form>
-      )}
+        ) : (
+          <form onSubmit={handleSave} className="space-y-4">
+            <h2 className="text-2xl font-bold text-pink-500 text-center mb-6">Edit Details</h2>
+            
+            <div className="space-y-2">
+              <label className="text-sm font-semibold text-gray-700 ml-1">Full Name</label>
+              <input type="text" className="w-full border-2 border-pink-100 p-3 rounded-xl focus:border-pink-300 outline-none" value={formData.fullName} onChange={(e) => setFormData({ ...formData, fullName: e.target.value })} />
+            </div>
+            
+            <div className="space-y-2">
+              <label className="text-sm font-semibold text-gray-700 ml-1">Area</label>
+              <input type="text" className="w-full border-2 border-pink-100 p-3 rounded-xl focus:border-pink-300 outline-none" value={formData.area} onChange={(e) => setFormData({ ...formData, area: e.target.value })} />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-semibold text-gray-700 ml-1">New Password</label>
+              <input type="password" placeholder="••••••••" className="w-full border-2 border-pink-100 p-3 rounded-xl focus:border-pink-300 outline-none" value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })} />
+            </div>
+
+            <div className="flex gap-3 pt-4">
+              <button type="submit" disabled={loading} className="flex-1 bg-pink-500 text-white font-bold py-3 rounded-2xl hover:bg-pink-600 transition">
+                {loading ? "Saving..." : "Save Changes"}
+              </button>
+              <button type="button" onClick={() => setIsEditing(false)} className="bg-gray-200 text-gray-700 font-bold py-3 px-6 rounded-2xl hover:bg-gray-300 transition">
+                Cancel
+              </button>
+            </div>
+          </form>
+        )}
+      </div>
     </div>
   );
 }
