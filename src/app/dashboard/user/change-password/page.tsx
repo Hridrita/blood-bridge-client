@@ -5,24 +5,24 @@ import { useState } from 'react';
 export default function ForgetPasswordPage() {
   const [email, setEmail] = useState('');
   const [newPassword, setNewPassword] = useState('');
-  const [step, setStep] = useState(1); // ১ = ইমেইল দেওয়া, ২ = নতুন পাসওয়ার্ড দেওয়া
+  const [step, setStep] = useState(1); 
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // 🎯 ধাপ ১: ইমেইল সাবমিট করা
+  
   const handleEmailSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
-    // ১ সেকেন্ডের একটি রিয়ালিস্টিক লোডিং ইফেক্ট
+    
     setTimeout(() => {
       setLoading(false);
       setMessage('Email verified successfully! Please set your new password.');
-      setStep(2); // ২ নম্বর ধাপে নিয়ে যাবে
+      setStep(2);
     }, 1000);
   };
 
-  // 🎯 ্ধাপ ২: পাসওয়ার্ড রিসেট কনফার্মেশন (মক সাকসেস ফ্লো)
+  
   const handlePasswordReset = (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -31,7 +31,7 @@ export default function ForgetPasswordPage() {
       setLoading(false);
       setMessage('Password reset successful! Redirecting to login page...');
       
-      // ২ সেকেন্ড পর সরাসরি লগইন পেজে রিডাইরেক্ট করবে
+      
       setTimeout(() => {
         window.location.href = '/login';
       }, 2000);
@@ -43,7 +43,7 @@ export default function ForgetPasswordPage() {
       <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg border">
         <h2 className="text-center text-2xl font-bold text-red-600 mb-4">🩸 Reset Password</h2>
         
-        {/* সাকসেস মেসেজ পপআপ */}
+        
         {message && (
           <div className="mb-4 rounded-lg bg-green-100 p-3 text-sm text-green-600 text-center font-medium">
             {message}
@@ -51,7 +51,7 @@ export default function ForgetPasswordPage() {
         )}
 
         {step === 1 ? (
-          /* ফরম ১: ইমেইল ইনপুট */
+         
           <form onSubmit={handleEmailSubmit} className="space-y-4">
             <p className="text-center text-gray-500 text-sm mb-4">Enter your registered email to verify account.</p>
             <div>
@@ -74,7 +74,7 @@ export default function ForgetPasswordPage() {
             </button>
           </form>
         ) : (
-          /* ফরম ২: নতুন পাসওয়ার্ড ইনপুট */
+          
           <form onSubmit={handlePasswordReset} className="space-y-4">
             <p className="text-center text-gray-500 text-sm mb-4">Account: <span className="font-semibold text-gray-700">{email}</span></p>
             <div>
