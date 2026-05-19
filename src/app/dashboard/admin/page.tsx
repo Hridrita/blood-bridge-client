@@ -127,7 +127,7 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-       
+        
         <div className="bg-gray-800 p-6 rounded-2xl border border-gray-700">
           <h2 className="text-xl font-bold mb-4 text-blue-400 flex items-center gap-2">👥 Registered Users ({users.length})</h2>
           <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2">
