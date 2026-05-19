@@ -2,10 +2,9 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import axiosInstance from '@/lib/axios';
+import axiosInstance from '../../lib/axios';
 
 export default function LoginPage() {
-  
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -13,35 +12,41 @@ export default function LoginPage() {
 
   const router = useRouter();
 
-  
   const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault(); 
+    e.preventDefault();
     setError('');
     setLoading(true);
 
     try {
-      
       const response = await axiosInstance.post('/auth/login', {
         email,
         password,
       });
 
-      
+    
+      console.log('Backend Response Data:', response.data);
+
       const { access_token, role } = response.data;
 
-      
-      localStorage.setItem('token', access_token);
-      localStorage.setItem('role', role);
+      if (access_token) {
+        localStorage.setItem('token', access_token);
+        
+        
+        const userRole = role || 'donor'; 
+        localStorage.setItem('role', userRole);
 
-      
-      if (role === 'admin') {
-        router.push('/dashboard/admin');
+        
+        if (userRole === 'admin') {
+          window.location.href = '/dashboard/admin';
+        } else {
+          window.location.href = '/dashboard/user';
+        }
       } else {
-        router.push('/dashboard/user');
+        setError('Token not received from server.');
       }
     } catch (err: any) {
-      
-      setError(err.response?.data?.message || 'Login failed. Please check credentials.');
+      console.error('Login Error:', err);
+      setError(err.response?.data?.message || 'Login failed. Invalid credentials.');
     } finally {
       setLoading(false);
     }
@@ -66,7 +71,7 @@ export default function LoginPage() {
               type="email"
               required
               className="w-full rounded-lg border border-gray-300 p-3 text-sm focus:border-red-500 focus:outline-none text-black"
-              placeholder="name@example.com"
+              placeholder="moonsaha@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
