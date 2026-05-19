@@ -59,12 +59,22 @@ export default function AdminDashboard() {
     if (!confirm('Are you sure you want to delete this blood request?')) return;
 
     try {
-      await axiosInstance.delete(`/blood-requests/${id}`); // DELETE /blood-requests/{id}
+      const token = localStorage.getItem('token');
+      await axiosInstance.delete(`/blood-requests/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }); // DELETE /blood-requests/{id}
       
       setRequests(requests.filter(req => req.id !== id));
       alert('Request deleted successfully!');
-    } catch (err) {
+    } catch (err:any) {
+      console.error(err);
+    if (err.response?.status === 403) {
+      alert('You are not authorized to perform this action.');
+    } else {
       alert('Failed to delete request.');
+    }
     }
   };
 

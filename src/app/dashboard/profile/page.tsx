@@ -10,6 +10,7 @@ export default function ProfilePage() {
   const [formData, setFormData] = useState({ fullName: "", area: "", contactNumber: "", password: "" });
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [searchResults, setSearchResults] = useState([]);
 
  
   useEffect(() => {

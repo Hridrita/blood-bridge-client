@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axiosInstance from "../../../lib/axios";
 import Link from "next/link";
+import SearchDonors from "../../components/SearchDonors";
 
 interface BloodRequest {
   id: number;
@@ -173,16 +174,21 @@ export default function UserDashboard() {
         </div>
       </aside>
 
+      
+
       <main className="flex-1 p-6 md:p-8 overflow-y-auto">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b pb-4 mb-6 gap-4">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">
+          
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">
               Active Blood Requests{" "}
             </h1>
             <p className="text-gray-500 text-sm mt-1">
               Welcome back! Check who needs blood today.
             </p>
-          </div>
+            </div>
+            
+          
 
           <div className="flex gap-2">
             <button
