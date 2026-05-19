@@ -37,21 +37,29 @@ export default function LoginPage() {
     
     try {
       const response = await axiosInstance.post('/auth/login', { email, password });
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('role', response.data.role || 'donor');
-      
-      
-      if (response.data.role === 'admin') {
-        window.location.href = '/dashboard/admin';
-      } else {
-        window.location.href = '/dashboard/user';
-      }
-    } catch (err: any) {
+      console.log("API Response Data:", response.data);
+
+      const accesstoken = response.data.token || response.data.access_token;
+
+      if (accesstoken) {
+        localStorage.setItem('token', accesstoken);
+        localStorage.setItem('role', response.data.role || 'donor');
+        
+        window.location.href = response.data.role === 'admin' ? '/dashboard/admin' : '/dashboard/user';
+        } 
+       else { 
+        setError('not getting any token');
+      } 
+    } catch (err: any) { 
       setError('Invalid email or password');
     } finally {
       setLoading(false);
     }
-  };
+  
+  }
+
+      
+  
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-red-50 p-4">

@@ -20,6 +20,14 @@ export default function UserDashboard() {
   const [loadingRequests, setLoadingRequests] = useState(true);
   const [error, setError] = useState("");
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [hospitalName, setHospitalName] = useState('');
+  const [location, setLocation] = useState('');
+  const [bloodGroup, setBloodGroup] = useState('O+');
+  const [contactNumber, setContactNumber] = useState('');
+  const [formLoading, setFormLoading] = useState(false);
+  const [formError, setFormError] = useState('');
+
   const router = useRouter();
 
   useEffect(() => {
@@ -43,6 +51,36 @@ export default function UserDashboard() {
       setError("Failed to load blood requests.");
     } finally {
       setLoadingRequests(false);
+    }
+  };
+
+  const handleCreateRequest = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setFormError('');
+    setFormLoading(true);
+
+    try {
+      
+      await axiosInstance.post('/blood-requests', {
+        hospitalName,
+        location,
+        bloodGroup,
+        contactNumber,
+        status: 'pending' 
+      });
+
+
+      setHospitalName('');
+      setLocation('');
+      setContactNumber('');
+      setIsModalOpen(false); 
+      fetchBloodRequests(); 
+      alert('Blood request posted successfully!');
+    } catch (err: any) {
+      console.error(err);
+      setFormError(err.response?.data?.message || 'Failed to post blood request. Please try again.');
+    } finally {
+      setFormLoading(false);
     }
   };
 
@@ -142,7 +180,7 @@ export default function UserDashboard() {
             <h2 className="text-lg font-bold text-gray-700">
               All Requests Feed
             </h2>
-            <button className="rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-red-700 shadow-sm transition">
+            <button onClick={() => setIsModalOpen(true)} className="rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-red-700 shadow-sm transition">
               + Request Blood
             </button>
           </div>
@@ -210,6 +248,101 @@ export default function UserDashboard() {
           )}
         </div>
       </main>
+
+      
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/30 p-4">
+          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl border animate-in fade-in zoom-in duration-200 text-black">
+            
+            <div className="flex justify-between items-center mb-4 border-b pb-2">
+              <h3 className="text-xl font-bold text-gray-900">🩸 Post a Blood Request</h3>
+              <button 
+                onClick={() => setIsModalOpen(false)} 
+                className="text-gray-400 hover:text-gray-600 text-xl font-bold"
+              >
+                ✕
+              </button>
+            </div>
+
+            {formError && <div className="mb-3 bg-red-100 text-red-600 p-2.5 rounded-lg text-xs font-medium">{formError}</div>}
+
+            <form onSubmit={handleCreateRequest} className="space-y-3.5">
+              
+              <div>
+                <label className="block text-xs font-semibold text-gray-600 mb-1">Hospital Name</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Dhaka Medical College"
+                  className="w-full rounded-lg border border-gray-300 p-2.5 text-sm focus:border-red-500 focus:outline-none bg-white text-black"
+                  value={hospitalName}
+                  onChange={(e) => setHospitalName(e.target.value)}
+                />
+              </div>
+
+             
+              <div>
+                <label className="block text-xs font-semibold text-gray-600 mb-1">Location / Area</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Shahbagh, Dhaka"
+                  className="w-full rounded-lg border border-gray-300 p-2.5 text-sm focus:border-red-500 focus:outline-none bg-white text-black"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                />
+              </div>
+
+              
+              <div>
+                <label className="block text-xs font-semibold text-gray-600 mb-1">Required Blood Group</label>
+                <select
+                  className="w-full rounded-lg border border-gray-300 p-2.5 text-sm focus:border-red-500 focus:outline-none bg-white text-black"
+                  value={bloodGroup}
+                  onChange={(e) => setBloodGroup(e.target.value)}
+                >
+                  {['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'].map((group) => (
+                    <option key={group} value={group}>{group}</option>
+                  ))}
+                </select>
+              </div>
+
+              
+              <div>
+                <label className="block text-xs font-semibold text-gray-600 mb-1">Contact Number</label>
+                <input
+                  type="text"
+                  required
+                  maxLength={11}
+                  placeholder="e.g. 017XXXXXXXX"
+                  className="w-full rounded-lg border border-gray-300 p-2.5 text-sm focus:border-red-500 focus:outline-none bg-white text-black"
+                  value={contactNumber}
+                  onChange={(e) => setContactNumber(e.target.value)}
+                />
+              </div>
+
+              
+              <div className="flex gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setIsModalOpen(false)}
+                  className="w-1/2 border rounded-xl p-2.5 text-sm font-semibold text-gray-600 hover:bg-gray-50 transition"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={formLoading}
+                  className="w-1/2 bg-red-600 hover:bg-red-700 text-white font-semibold p-2.5 rounded-xl text-sm transition disabled:bg-red-400"
+                >
+                  {formLoading ? 'Submitting...' : 'Post Request'}
+                </button>
+              </div>
+            </form>
+
+          </div>
+        </div>
+      )}
     </div>
   );
 }
