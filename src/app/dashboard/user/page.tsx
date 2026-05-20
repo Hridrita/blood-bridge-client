@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import axiosInstance from "../../../lib/axios";
 import Link from "next/link";
 import SearchDonors from "../../components/SearchDonors";
+import Footer from "@/app/components/footer";
 
 interface BloodRequest {
   id: number;
@@ -174,9 +175,8 @@ export default function UserDashboard() {
         </div>
       </aside>
 
-      
-
-      <main className="flex-1 p-6 md:p-8 overflow-y-auto">
+      <div className="flex flex-col flex-1 w-full">
+        <main className="flex-1 p-6 md:p-8 overflow-y-auto">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b pb-4 mb-6 gap-4">
           
             <div>
@@ -285,6 +285,15 @@ export default function UserDashboard() {
           )}
         </div>
       </main>
+
+      <Footer></Footer>
+      </div>
+
+      
+
+      
+
+      
 
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/30 p-4">
